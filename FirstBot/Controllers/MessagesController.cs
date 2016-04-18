@@ -2,7 +2,6 @@
 using System.Web.Http;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Connector.Utilities;
-using Microsoft.Bot.Builder.FormFlow;
 using FirstBot.Models;
 using Microsoft.Bot.Builder.Dialogs;
 
@@ -11,12 +10,6 @@ namespace FirstBot
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        internal static IFormDialog<Project> MakeRootDialog()
-        {
-            return FormDialog.FromForm(Project.BuildForm);
-        }
-
-
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -25,7 +18,8 @@ namespace FirstBot
         {
             if (message.Type == "Message")
             {
-                return await Conversation.SendAsync(message, MakeRootDialog);
+                //return await Conversation.SendAsync(message, MakeRootDialog);
+                return await Conversation.SendAsync(message, () => new LuisDialog());
             }
             else
             {

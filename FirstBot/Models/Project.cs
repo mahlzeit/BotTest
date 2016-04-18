@@ -3,6 +3,7 @@ using System;
 
 namespace FirstBot.Models
 {
+    #region Enumerations
     public enum ApplicationType
     {
         [Describe("Apple iOS")]
@@ -38,12 +39,16 @@ namespace FirstBot.Models
         Stock,
         Beautiful
     }
+    #endregion
 
     [Serializable]
     [Template(TemplateUsage.EnumSelectOne, ChoiceStyle = ChoiceStyleOptions.PerLine)]
-    [Template(TemplateUsage.NotUnderstood, "I do not understand \"{0}\".", "Try again, I don't get \"{0}\".")]
+    [Template(TemplateUsage.NotUnderstood, "I do not understand \"{0}\".", "Try again, I don't get \"{0}\".")]    
     class Project
     {
+
+        #region Project properties
+
         [Prompt("What type of app are you building? {||}")]
         public ApplicationType? ApplicationType;
 
@@ -68,6 +73,8 @@ namespace FirstBot.Models
         [Prompt("Do you need an app icon? {||}")]
         public bool? AppIconNeeded;
 
+        #endregion
+
         public static IForm<Project> BuildForm()
         {
             return new FormBuilder<Project>()
@@ -80,6 +87,7 @@ namespace FirstBot.Models
                 .Field(nameof(ConnectsToWebsite))
                 .Field(nameof(DesignExcellence))
                 .Field(nameof(AppIconNeeded))
+                .Message("Okay, got all the info needed...")
                 .Build();
         }
 
