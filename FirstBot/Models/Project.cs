@@ -1,5 +1,7 @@
-﻿using Microsoft.Bot.Builder.FormFlow;
+﻿using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
 using System;
+using System.Threading.Tasks;
 
 namespace FirstBot.Models
 {
@@ -79,7 +81,13 @@ namespace FirstBot.Models
         {
             return new FormBuilder<Project>()
                 .Message("Welcome to the project budget planner bot!")
-                .Field(nameof(ApplicationType))
+                .Field(nameof(ApplicationType)).OnCompletionAsync(async (ctx, state) =>
+                {
+                    var reply = ctx.MakeMessage();
+                    reply.Text = string.Format("The price will be {0}", await CalculatePriceAsync(state));
+                    await ctx.PostAsync(reply);
+                    ctx.Done(state);
+                })
                 .Field(nameof(LoginRequired))
                 .Field(nameof(PersonalProfileUsed))
                 .Field(nameof(MonetizationType))
@@ -91,7 +99,9 @@ namespace FirstBot.Models
                 .Build();
         }
 
-        private static int CalculatePrice(Project project)
+        
+
+        private static async Task<int> CalculatePriceAsync(Project project)
         {
             int price = 0;
 
